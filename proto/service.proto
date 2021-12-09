@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package pb;
+option go_package = "./;pb";
+
+message Product{
+  uint32 id  = 1;
+  string name = 2;
+  uint32 count = 3;
+}
+
+
+service ProductService{
+  rpc ProductChangeCount(Product) returns (google.protobuf.Empty);
+}

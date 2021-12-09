@@ -2,6 +2,5 @@
 .idea/*
 .idea/**
 *.log
+*.logs
 .env
-.*
-!.gitignore

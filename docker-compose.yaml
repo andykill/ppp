@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  pppprotobuf:
+    build:
+      context: ./
+      dockerfile: proto/Dockerfile
+    volumes:
+      - ./api/pb:/api:rw
+  pppweb:
+    image: nginx:latest
+    volumes:
+      - ./.docker/nginx/api.conf:/etc/nginx/conf.d/api.conf
+      - .:/var/www
+    ports:
+      - 80:80
+    restart: on-failure
+    depends_on:
+      - pppapi
+    networks:
+      - pppnet
+  pppapi:
+    build: ./api
+    volumes:
+      - ./api:/app
+    working_dir: /app
+    networks:
+      - pppnet
+    depends_on:
+      - pppdb
+  pppdb:
+    image: postgres:12
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 5432:5432
+    networks:
+      - pppnet
+networks:
+  pppnet:
+    name: pppnet
+
